@@ -1,27 +1,34 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { demoEvents } from '@/data/demoEvents';
-import { buildPrompt } from '@/api/promptBuilder';
+import realEvents from '@/data/realEvents.json';
 import { generateNarrativeTwoStage } from '@/api/llmService';
-// import { generateNarrativeMock } from '@/api/llmService';
 import PromptControls from '@/components/PromptControls.vue';
 import NarrativeDisplay from '@/components/NarrativeDisplay.vue';
+import type { GameEvent } from '@/interfaces/GameEvent';
 
 // State
-const selectedEvent = ref(demoEvents[0]);
+// Cast the JSON to your Type
+const eventsList = realEvents as unknown as GameEvent[]; 
+
+const selectedEvent = ref(eventsList[0]);
 const selectedTone = ref('Neutral');
-const focusPlayer = ref(demoEvents[0].primary_player);
+
+// Initialize focus player with the primary player of the first event (Safe access)
+const focusPlayer = ref(eventsList[0]?.primary_player || 'Unknown Player');
+
 const narrativeText = ref('Select options and click Generate to see the AI output.');
 const isLoading = ref(false);
 
-// Derived state for the players dropdown (unique list)
+// Derived state for the players dropdown (unique list from REAL data)
 const allPlayers = computed(() => {
   const players = new Set<string>();
-  demoEvents.forEach(e => {
-    players.add(e.primary_player);
-    players.add(e.secondary_player);
+  eventsList.forEach(e => {
+    // Only add valid player names
+    if (e.primary_player) players.add(e.primary_player);
+    if (e.secondary_player) players.add(e.secondary_player);
   });
-  return Array.from(players);
+  // Sort alphabetically for better UX
+  return Array.from(players).sort();
 });
 
 async function handleGenerate() {
@@ -60,7 +67,7 @@ async function handleGenerate() {
           v-model:selectedEvent="selectedEvent"
           v-model:selectedTone="selectedTone"
           v-model:focusPlayer="focusPlayer"
-          :events="demoEvents"
+          :events="eventsList"
           :players="allPlayers"
         />
         <button 
