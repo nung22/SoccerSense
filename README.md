@@ -70,7 +70,7 @@ soccer-sense/
 
 ### 1. Clone and Install Dependencies
 ```bash
-git clone [https://github.com/your-repo/soccer-sense.git](https://github.com/your-repo/soccer-sense.git)
+git clone https://github.com/nung22/SoccerSense.git
 cd soccer-sense
 ```
 
