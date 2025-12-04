@@ -72,6 +72,9 @@ soccer-sense/
 ```bash
 git clone https://github.com/nung22/SoccerSense.git
 cd soccer-sense
+
+# Install Frontend Dependencies
+yarn install
 ```
 
 ### 2. Run the Data Pipeline (Python)
