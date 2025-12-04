@@ -1,0 +1,47 @@
+[
+  {
+    "id": 300,
+    "event_type": "Goal",
+    "time_min": 8,
+    "primary_player": "Player10",
+    "secondary_player": "Team Effort",
+    "motion_context": "High pressure! Nearest defender was only 0.5m away, forcing a rapid decision.",
+    "team": "Home"
+  },
+  {
+    "id": 301,
+    "event_type": "Goal",
+    "time_min": 35,
+    "primary_player": "Player24",
+    "secondary_player": "Team Effort",
+    "motion_context": "Moderate pressure. The attacker had 1.5m of space to stabilize before the shot.",
+    "team": "Away"
+  },
+  {
+    "id": 302,
+    "event_type": "Goal",
+    "time_min": 49,
+    "primary_player": "Player9",
+    "secondary_player": "Team Effort",
+    "motion_context": "Moderate pressure. The attacker had 1.7m of space to stabilize before the shot.",
+    "team": "Home"
+  },
+  {
+    "id": 303,
+    "event_type": "Goal",
+    "time_min": 76,
+    "primary_player": "Player20",
+    "secondary_player": "Team Effort",
+    "motion_context": "Wide open. The defense completely lost the player, leaving 6.0m of open grass.",
+    "team": "Away"
+  },
+  {
+    "id": 304,
+    "event_type": "Goal",
+    "time_min": 80,
+    "primary_player": "Player12",
+    "secondary_player": "Team Effort",
+    "motion_context": "High pressure! Nearest defender was only 0.8m away, forcing a rapid decision.",
+    "team": "Home"
+  }
+]
