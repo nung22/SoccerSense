@@ -1,11 +1,8 @@
-// src/api/llmService.ts
 import { GoogleGenAI } from '@google/genai';
-import { buildAnalysisPrompt, buildNarrativePrompt } from './promptBuilder';
+import { buildMatchReportPrompt } from './promptBuilder';
 import type { GameEvent } from '@/interfaces/GameEvent';
-import type { AnalysisResult } from '@/interfaces/AnalysisResult'; // Assuming you define this interface
 
-// --- Initialization ---
-// Get API key from Vite environment variable (loaded from .env.local)
+// --- Configuration ---
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string;
 
 if (!apiKey) {
@@ -13,65 +10,90 @@ if (!apiKey) {
 }
 
 const ai = new GoogleGenAI({ apiKey });
-const model = "gemini-2.5-flash"; // Fast and capable model for this task
 
-// --- Core Two-Stage Logic ---
+// If 2.5-flash-lite continues to give 503s, try switching back to "gemini-1.5-flash"
+const model = "gemini-2.5-flash"; 
 
-export async function generateNarrativeTwoStage(
-  event: GameEvent,
-  tone: string,
-  focusPlayer: string
-): Promise<string> {
+// --- Helper: Auto-Retry for Rate Limits (429) & Server Errors (503) ---
+async function callGeminiWithRetry(prompt: string, isJson: boolean = false, retries = 3): Promise<string> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await ai.models.generateContent({
+        model: model,
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        config: isJson ? { 
+          responseMimeType: "application/json" 
+        } : undefined,
+      });
 
-  // Stage 1: Data Analysis (Reasoning)
-  const analysisPrompt = buildAnalysisPrompt(event);
-  
-  console.log("Stage 1: Requesting Analysis...");
+      // Safely access text
+      const text = response.text ? response.text : "";
+      if (!text) throw new Error("Empty response from AI");
+      
+      return text;
 
-  const analysisResponse = await ai.models.generateContent({
-      model: model,
-      contents: [{ role: "user", parts: [{ text: analysisPrompt }] }],
-      config: {
-          responseMimeType: "application/json", // Crucial: Ask for JSON output
-          responseSchema: {
-            type: "OBJECT",
-            properties: {
-              sentiment: { type: "STRING", enum: ["positive", "negative", "neutral"] },
-              key_action: { type: "STRING" },
-              justification: { type: "STRING" },
-            },
-          },
-      },
-  });
-
-  const analysisText = analysisResponse.text;
-
-  if (!analysisText) {
-    throw new Error("AI did not return any text. The response might have been blocked.");
+    } catch (error: any) {
+      // Check for Rate Limit (429) OR Server Overload (503)
+      const status = error.status || error.code;
+      const isTransient = status === 429 || status === 503 || (error.message && (error.message.includes('429') || error.message.includes('503')));
+      
+      if (isTransient) {
+        console.warn(`⚠️ API Issue (${status}). Retrying in ${(i + 1) * 2} seconds...`);
+        // Wait: 2s, 4s, 6s...
+        await new Promise(resolve => setTimeout(resolve, (i + 1) * 2000));
+        continue; // Try again
+      }
+      throw error; // Crash if it's a permanent error (like 400 Bad Request or 401 Auth)
+    }
   }
+  throw new Error("Max retries exceeded. Please wait a moment.");
+}
+
+// --- Main Function: Generate Match Report ---
+export async function generateMatchReport(events: GameEvent[], tone: string): Promise<{ summary: string, key_moments: number[] }> {
+  const prompt = buildMatchReportPrompt(events, tone);
   
-  // Parse the JSON output from Stage 1
-  let analysisObject: AnalysisResult;
+  // 1. Get raw text (Retries automatically if needed)
+  let jsonText = await callGeminiWithRetry(prompt, true);
+
+  // 2. Clean Markdown: Remove ```json and ``` if AI adds them
+  jsonText = jsonText.replace(/```json|```/g, '').trim();
+
   try {
-    analysisObject = JSON.parse(analysisText) as AnalysisResult;
-    console.log("Stage 1 Result:", analysisObject);
+    const data = JSON.parse(jsonText);
+    
+    // --- ROBUST PARSING LOGIC ---
+    // This handles cases where AI ignores instructions and uses old keys
+    
+    // 1. Summary: Check 'summary' first, fallback to 'justification'
+    const summaryText = data.summary || data.justification || "No summary generated.";
+
+    // 2. Key Moments: Check 'key_moments', fallback to 'key_action'
+    let rawMoments = data.key_moments || data.key_action || [];
+    let momentIds: number[] = [];
+
+    // Handle Array format: [300, 303]
+    if (Array.isArray(rawMoments)) {
+      momentIds = rawMoments.map((id: any) => Number(id)); 
+    } 
+    // Handle String format: "ID_300, ID_303" (Fallback)
+    else if (typeof rawMoments === 'string') {
+      const matches = rawMoments.match(/\d+/g);
+      if (matches) {
+        momentIds = matches.map(Number);
+      }
+    }
+
+    return {
+      summary: summaryText,
+      key_moments: momentIds
+    };
+
   } catch (e) {
-    console.error("Failed to parse analysis JSON:", analysisText);
-    throw new Error("AI returned unparsable analysis. Please check prompt.");
+    console.error("JSON Parse Failed. Raw text was:", jsonText);
+    return { 
+      summary: `Error parsing report output. Raw text: ${jsonText.substring(0, 100)}...`, 
+      key_moments: [] 
+    };
   }
-
-
-  // Stage 2: Narrative Generation (Styling)
-  const narrativePrompt = buildNarrativePrompt(JSON.stringify(analysisObject), tone, focusPlayer);
-  
-  console.log("Stage 2: Requesting Narrative Generation...");
-
-  const narrativeResponse = await ai.models.generateContent({
-    model: model,
-    contents: [{ role: "user", parts: [{ text: narrativePrompt }] }],
-    // No specific JSON format needed here, we want plain text output.
-  });
-
-  // Final Output
-  return `(AI Generated Two-Stage Commentary):\n\n${narrativeResponse.text}`;
 }

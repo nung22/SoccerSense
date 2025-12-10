@@ -1,43 +1,25 @@
 import type { GameEvent } from '@/interfaces/GameEvent';
 
-// C1: Few-Shot Examples for style guidance (kept static)
-const FEW_SHOT_NARRATIVE_EXAMPLES = `
-  ---
-  EXAMPLE ANALYSIS: {"sentiment": "positive", "key_action": "pass execution"}
-  EXAMPLE NARRATIVE (Neutral): The effective pass opened up space in the midfield.
-  ---
-`;
-
-export function buildAnalysisPrompt(event: GameEvent): string {
-  // Stage 1: Ask the model to analyze the event and context. Output MUST be JSON.
-  return `
-    TASK: Analyze the following soccer event data and output a single JSON object.
-    
-    DATA:
-    Event Type: ${event.event_type}
-    Primary Player: ${event.primary_player}
-    Contextual Motion Insight: ${event.motion_context}
-
-    OUTPUT SCHEMA: { "sentiment": "positive" | "negative" | "neutral", "key_action": string, "justification": string }
-  `;
-}
-
-export function buildNarrativePrompt(
-  analysisJson: string, // Input from Stage 1
-  tone: string,         // Input from UI (C3)
-  focusPlayer: string   // Input from UI (C3)
-): string {
-  // Stage 2: Ask the model to apply the requested style to the analysis.
-  
-  const systemInstruction = `You are a world-class sports commentator. Your analysis MUST be written with a ${tone} tone and focused ONLY on the actions of ${focusPlayer}.`;
+export function buildMatchReportPrompt(events: GameEvent[], tone: string): string {
+  // We keep the ID_ prefix in the input so the AI can clearly reference them
+  const eventsSummary = events.map(e => 
+    `ID_${e.id}: Min ${e.time_min}, ${e.event_type} by ${e.primary_player} (${e.team}). Context: ${e.motion_context}`
+  ).join('\n');
 
   return `
-    ${systemInstruction}
+    You are a world-class sports analyst and journalist.
+    TONE: ${tone}
+    EVENTS:
+    ${eventsSummary}
     
-    CONTEXTUAL ANALYSIS (JSON): ${analysisJson}
-    
-    ${FEW_SHOT_NARRATIVE_EXAMPLES}
-    
-    TASK: Using the JSON analysis provided above, generate a two-sentence narrative summary with the requested tone.
+    TASK: Output a valid JSON object with EXACTLY these two fields:
+    1. "summary": A 3-paragraph match report narrative highlighting the overall tactical story revealed by the context. Ensure the article does not sound robotic, is well-written, and uses varied vocabulary.
+    2. "key_moments": An array of integers (e.g., [300, 303]) representing the IDs of the 3 most important events.
+
+    IMPORTANT CONSTRAINTS:
+    - Use the key "summary". Do NOT use "justification".
+    - Use the key "key_moments". Do NOT use "key_action".
+    - The "key_moments" array must contain NUMBERS only, not strings (e.g., [300, 303], NOT ["ID_300", "ID_303"]).
+    - Output RAW JSON only. Do not wrap it in markdown code blocks (no \`\`\`json).
   `;
 }
