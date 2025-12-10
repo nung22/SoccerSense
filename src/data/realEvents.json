@@ -7,6 +7,8 @@
     "secondary_player": "Team Effort",
     "motion_context": "High pressure! Nearest defender was only 0.5m away.",
     "team": "Home",
+    "home_team": "PRIME Barcelona",
+    "away_team": "PRIME Real Madrid",
     "attacker_x": 0.05055,
     "attacker_y": 0.44260999999999995,
     "defender_x": 0.05411,
@@ -95,7 +97,99 @@
         "y": 0.37034
       }
     ],
-    "has_tracking": true
+    "has_tracking": true,
+    "build_up_events": [
+      {
+        "time_s": 465.64,
+        "time_min": 7,
+        "type": "CHALLENGE",
+        "subtype": "TACKLE-WON",
+        "from": "L. Suarez",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 465.64,
+        "time_min": 7,
+        "type": "RECOVERY",
+        "subtype": "THEFT",
+        "from": "L. Suarez",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 465.88,
+        "time_min": 7,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "L. Suarez",
+        "to": "L. Messi",
+        "team": "Home"
+      },
+      {
+        "time_s": 467.4,
+        "time_min": 7,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "L. Messi",
+        "to": "S. Busquets",
+        "team": "Home"
+      },
+      {
+        "time_s": 468.84,
+        "time_min": 7,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "S. Busquets",
+        "to": "L. Suarez",
+        "team": "Home"
+      },
+      {
+        "time_s": 472.4,
+        "time_min": 7,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "L. Suarez",
+        "to": "A. Iniesta",
+        "team": "Home"
+      },
+      {
+        "time_s": 478.32,
+        "time_min": 7,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "A. Iniesta",
+        "to": "L. Suarez",
+        "team": "Home"
+      },
+      {
+        "time_s": 479.04,
+        "time_min": 7,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "L. Suarez",
+        "to": "A. Iniesta",
+        "team": "Home"
+      },
+      {
+        "time_s": 482.76,
+        "time_min": 8,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "A. Iniesta",
+        "to": "M. Ter Stegen",
+        "team": "Home"
+      },
+      {
+        "time_s": 487.2,
+        "time_min": 8,
+        "type": "PASS",
+        "subtype": "CROSS",
+        "from": "M. Ter Stegen",
+        "to": "L. Messi",
+        "team": "Home"
+      }
+    ]
   },
   {
     "id": 301,
@@ -105,6 +199,8 @@
     "secondary_player": "Team Effort",
     "motion_context": "Moderate pressure. The attacker had 1.5m of space.",
     "team": "Away",
+    "home_team": "PRIME Barcelona",
+    "away_team": "PRIME Real Madrid",
     "attacker_x": 0.92179,
     "attacker_y": 0.54488,
     "defender_x": 0.9114,
@@ -193,7 +289,99 @@
         "y": 0.50892
       }
     ],
-    "has_tracking": true
+    "has_tracking": true,
+    "build_up_events": [
+      {
+        "time_s": 2104.8,
+        "time_min": 35,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "I. Rakitic",
+        "to": "L. Messi",
+        "team": "Home"
+      },
+      {
+        "time_s": 2107.68,
+        "time_min": 35,
+        "type": "CHALLENGE",
+        "subtype": "AERIAL-WON",
+        "from": "L. Messi",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 2107.68,
+        "time_min": 35,
+        "type": "BALL LOST",
+        "subtype": "HEAD",
+        "from": "L. Messi",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 2107.76,
+        "time_min": 35,
+        "type": "CHALLENGE",
+        "subtype": "AERIAL-WON",
+        "from": "S. Ramos",
+        "to": "nan",
+        "team": "Away"
+      },
+      {
+        "time_s": 2107.76,
+        "time_min": 35,
+        "type": "RECOVERY",
+        "subtype": "INTERCEPTION",
+        "from": "S. Ramos",
+        "to": "nan",
+        "team": "Away"
+      },
+      {
+        "time_s": 2107.84,
+        "time_min": 35,
+        "type": "PASS",
+        "subtype": "HEAD",
+        "from": "S. Ramos",
+        "to": "R. Varane",
+        "team": "Away"
+      },
+      {
+        "time_s": 2111.36,
+        "time_min": 35,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "R. Varane",
+        "to": "Marcelo",
+        "team": "Away"
+      },
+      {
+        "time_s": 2114.84,
+        "time_min": 35,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "Marcelo",
+        "to": "L. Modric",
+        "team": "Away"
+      },
+      {
+        "time_s": 2117.64,
+        "time_min": 35,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "L. Modric",
+        "to": "T. Kroos",
+        "team": "Away"
+      },
+      {
+        "time_s": 2121.08,
+        "time_min": 35,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "T. Kroos",
+        "to": "C. Ronaldo",
+        "team": "Away"
+      }
+    ]
   },
   {
     "id": 302,
@@ -203,6 +391,8 @@
     "secondary_player": "Team Effort",
     "motion_context": "Moderate pressure. The attacker had 1.7m of space.",
     "team": "Home",
+    "home_team": "PRIME Barcelona",
+    "away_team": "PRIME Real Madrid",
     "attacker_x": 0.9479,
     "attacker_y": 0.48624,
     "defender_x": 0.94388,
@@ -291,7 +481,99 @@
         "y": 0.65586
       }
     ],
-    "has_tracking": true
+    "has_tracking": true,
+    "build_up_events": [
+      {
+        "time_s": 2942.12,
+        "time_min": 49,
+        "type": "CHALLENGE",
+        "subtype": "AERIAL-LOST",
+        "from": "L. Suarez",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 2943.76,
+        "time_min": 49,
+        "type": "RECOVERY",
+        "subtype": "nan",
+        "from": "D. Suarez",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 2944.84,
+        "time_min": 49,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "D. Suarez",
+        "to": "S. Busquets",
+        "team": "Home"
+      },
+      {
+        "time_s": 2947.68,
+        "time_min": 49,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "S. Busquets",
+        "to": "A. Iniesta",
+        "team": "Home"
+      },
+      {
+        "time_s": 2952.52,
+        "time_min": 49,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "A. Iniesta",
+        "to": "L. Suarez",
+        "team": "Home"
+      },
+      {
+        "time_s": 2954.16,
+        "time_min": 49,
+        "type": "CHALLENGE",
+        "subtype": "TACKLE-LOST",
+        "from": "L. Suarez",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 2954.16,
+        "time_min": 49,
+        "type": "BALL LOST",
+        "subtype": "THEFT",
+        "from": "L. Suarez",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 2955.08,
+        "time_min": 49,
+        "type": "RECOVERY",
+        "subtype": "INTERCEPTION",
+        "from": "L. Messi",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 2956.08,
+        "time_min": 49,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "L. Messi",
+        "to": "A. Iniesta",
+        "team": "Home"
+      },
+      {
+        "time_s": 2958.2,
+        "time_min": 49,
+        "type": "PASS",
+        "subtype": "CROSS",
+        "from": "A. Iniesta",
+        "to": "L. Suarez",
+        "team": "Home"
+      }
+    ]
   },
   {
     "id": 303,
@@ -301,6 +583,8 @@
     "secondary_player": "Team Effort",
     "motion_context": "Wide open. The defense lost the player (6.0m separation).",
     "team": "Away",
+    "home_team": "PRIME Barcelona",
+    "away_team": "PRIME Real Madrid",
     "attacker_x": 0.11605,
     "attacker_y": 0.47868999999999995,
     "defender_x": 0.15141,
@@ -389,7 +673,99 @@
         "y": 0.65314
       }
     ],
-    "has_tracking": true
+    "has_tracking": true,
+    "build_up_events": [
+      {
+        "time_s": 4462.8,
+        "time_min": 74,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "Player 26",
+        "to": "R. Varane",
+        "team": "Away"
+      },
+      {
+        "time_s": 4464.84,
+        "time_min": 74,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "R. Varane",
+        "to": "L. Modric",
+        "team": "Away"
+      },
+      {
+        "time_s": 4466.92,
+        "time_min": 74,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "L. Modric",
+        "to": "R. Varane",
+        "team": "Away"
+      },
+      {
+        "time_s": 4468.52,
+        "time_min": 74,
+        "type": "PASS",
+        "subtype": "CROSS",
+        "from": "R. Varane",
+        "to": "C. Ronaldo",
+        "team": "Away"
+      },
+      {
+        "time_s": 4468.76,
+        "time_min": 74,
+        "type": "BALL LOST",
+        "subtype": "INTERCEPTION",
+        "from": "N. Semedo",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 4468.76,
+        "time_min": 74,
+        "type": "RECOVERY",
+        "subtype": "INTERCEPTION",
+        "from": "N. Semedo",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 4470.32,
+        "time_min": 74,
+        "type": "SHOT",
+        "subtype": "BLOCKED",
+        "from": "C. Ronaldo",
+        "to": "nan",
+        "team": "Away"
+      },
+      {
+        "time_s": 4470.52,
+        "time_min": 74,
+        "type": "BALL LOST",
+        "subtype": "HAND BALL",
+        "from": "L. Suarez",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 4470.52,
+        "time_min": 74,
+        "type": "RECOVERY",
+        "subtype": "BLOCKED",
+        "from": "L. Suarez",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 4535.04,
+        "time_min": 75,
+        "type": "CARD",
+        "subtype": "YELLOW",
+        "from": "L. Suarez",
+        "to": "nan",
+        "team": "Home"
+      }
+    ]
   },
   {
     "id": 304,
@@ -399,6 +775,8 @@
     "secondary_player": "Team Effort",
     "motion_context": "High pressure! Nearest defender was only 0.8m away.",
     "team": "Home",
+    "home_team": "PRIME Barcelona",
+    "away_team": "PRIME Real Madrid",
     "attacker_x": 0.78769,
     "attacker_y": 0.42003,
     "defender_x": 0.78217,
@@ -487,6 +865,98 @@
         "y": 0.71911
       }
     ],
-    "has_tracking": true
+    "has_tracking": true,
+    "build_up_events": [
+      {
+        "time_s": 4828.68,
+        "time_min": 80,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "K. Navas",
+        "to": "Player 26",
+        "team": "Away"
+      },
+      {
+        "time_s": 4830.12,
+        "time_min": 80,
+        "type": "CHALLENGE",
+        "subtype": "GROUND-LOST",
+        "from": "Player 26",
+        "to": "nan",
+        "team": "Away"
+      },
+      {
+        "time_s": 4830.12,
+        "time_min": 80,
+        "type": "BALL LOST",
+        "subtype": "INTERCEPTION",
+        "from": "Player 26",
+        "to": "nan",
+        "team": "Away"
+      },
+      {
+        "time_s": 4830.48,
+        "time_min": 80,
+        "type": "CHALLENGE",
+        "subtype": "TACKLE-WON",
+        "from": "D. Suarez",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 4830.48,
+        "time_min": 80,
+        "type": "RECOVERY",
+        "subtype": "THEFT",
+        "from": "D. Suarez",
+        "to": "nan",
+        "team": "Home"
+      },
+      {
+        "time_s": 4830.48,
+        "time_min": 80,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "D. Suarez",
+        "to": "S. Busquets",
+        "team": "Home"
+      },
+      {
+        "time_s": 4833.64,
+        "time_min": 80,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "S. Busquets",
+        "to": "G. Pique",
+        "team": "Home"
+      },
+      {
+        "time_s": 4835.8,
+        "time_min": 80,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "G. Pique",
+        "to": "J. Cillessen",
+        "team": "Home"
+      },
+      {
+        "time_s": 4837.48,
+        "time_min": 80,
+        "type": "CHALLENGE",
+        "subtype": "GROUND-LOST",
+        "from": "G. Bale",
+        "to": "nan",
+        "team": "Away"
+      },
+      {
+        "time_s": 4839.0,
+        "time_min": 80,
+        "type": "PASS",
+        "subtype": "nan",
+        "from": "J. Cillessen",
+        "to": "Rafinha",
+        "team": "Home"
+      }
+    ]
   }
 ]

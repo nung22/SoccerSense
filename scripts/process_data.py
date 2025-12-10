@@ -1,5 +1,7 @@
 import json
+import os
 import pandas as pd
+import requests
 from kloppy import metrica
 
 # Define the correct CSV URL for Sample Game 2 Events
@@ -183,6 +185,8 @@ def main():
             "secondary_player": "Team Effort", 
             "motion_context": analysis["context"],
             "team": str(row['Team']),
+            "home_team": "PRIME Barcelona",
+            "away_team": "PRIME Real Madrid",
             
             # NEW FIELDS
             "attacker_x": analysis["attacker_x"],
@@ -194,8 +198,45 @@ def main():
             "has_tracking": analysis["has_tracking"]
         }
         
+        # --- COLLECT LAST 10 EVENTS LEADING UP TO THE GOAL ---
+        timestamp = row['Start Time [s]']
+        prior_events = events_df[events_df['Start Time [s]'] < timestamp].sort_values('Start Time [s]')
+        last_10 = prior_events.tail(10)
+
+        # Keep a compact representation of each prior event
+        build_up = []
+        for _, ev in last_10.iterrows():
+            ev_obj = {
+                'time_s': float(ev['Start Time [s]']),
+                'time_min': int(ev['Start Time [s]'] / 60),
+                'type': str(ev.get('Type', '')),
+                'subtype': str(ev.get('Subtype', '')),
+                'from': PLAYER_MAPPING.get(str(ev.get('From', '')), str(ev.get('From', ''))),
+                'to': PLAYER_MAPPING.get(str(ev.get('To', '')), str(ev.get('To', ''))),
+                'team': str(ev.get('Team', ''))
+            }
+            build_up.append(ev_obj)
+
+        game_event['build_up_events'] = build_up
+
         output_events.append(game_event)
         print(f"   Processed Goal {i+1}: {analysis}")
+
+        # --- PREPARE PROMPT FOR GEMINI (best-effort) ---
+        prompt = prepare_gemini_prompt(game_event)
+
+        # If gemini config provided, call API; otherwise persist payloads for review
+        gemini_key = os.environ.get('GEMINI_API_KEY')
+        gemini_endpoint = os.environ.get('GEMINI_ENDPOINT')
+        if gemini_key and gemini_endpoint:
+            try:
+                send_to_gemini(prompt, gemini_endpoint, gemini_key)
+            except Exception as e:
+                print(f"Warning: failed to call Gemini API: {e}")
+        else:
+            # Save prompts locally for later ingestion
+            payloads_path = os.path.join(os.path.dirname(__file__), 'gemini_payloads.json')
+            save_gemini_payload(payloads_path, game_event['id'], prompt)
 
     # Save to JSON
     output_path = 'src/data/realEvents.json'
@@ -203,6 +244,81 @@ def main():
         json.dump(output_events, f, indent=2)
     
     print(f"\nSuccess! Real data saved to {output_path}")
+
+
+def prepare_gemini_prompt(game_event: dict) -> str:
+    """Create a plain-text prompt summarizing the goal and the preceding events
+    for use with a generative model (Gemini)."""
+    lines = []
+    lines.append(f"Analyze the following goal event and its build-up. Provide an in-depth analysis of how the goal was scored, including who passed the ball, whether defenders were near the scorer, how many passes were in the build-up, and whether the scorer passed through defenders.")
+    lines.append("")
+    lines.append("GOAL EVENT:")
+    lines.append(json.dumps({
+        'id': game_event.get('id'),
+        'time_min': game_event.get('time_min'),
+        'primary_player': game_event.get('primary_player'),
+        'team': game_event.get('team'),
+        'motion_context': game_event.get('motion_context')
+    }, indent=2))
+    lines.append("")
+    lines.append("BUILD-UP (most recent first):")
+    for ev in reversed(game_event.get('build_up_events', [])):
+        lines.append(json.dumps(ev))
+
+    # Add tracking summary if available
+    if game_event.get('has_tracking'):
+        lines.append("")
+        lines.append("TRACKING SUMMARY:")
+        lines.append(json.dumps({
+            'attacker_x': game_event.get('attacker_x'),
+            'attacker_y': game_event.get('attacker_y'),
+            'defender_x': game_event.get('defender_x'),
+            'defender_y': game_event.get('defender_y'),
+            'teammates_count': len(game_event.get('teammates', [])),
+            'opponents_count': len(game_event.get('opponents', []))
+        }, indent=2))
+
+    lines.append("")
+    lines.append("Please return a JSON object with these fields: 'summary', 'pass_sequence', 'pressure_assessment', 'key_players', 'recommendations'. Keep answers factual and reference the events and tracking data provided.")
+
+    return "\n".join(lines)
+
+
+def send_to_gemini(prompt: str, endpoint: str, api_key: str):
+    """Send the prompt to a configured Gemini-like endpoint using a POST request.
+    The `endpoint` should accept JSON {"prompt": "..."} and Bearer auth.
+    This is intentionally generic to support different deployment setups.
+    """
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json'
+    }
+    payload = { 'prompt': prompt }
+    resp = requests.post(endpoint, headers=headers, json=payload, timeout=30)
+    resp.raise_for_status()
+    # You may wish to persist or process the response; here we print a truncated confirmation
+    try:
+        data = resp.json()
+        print(f"Gemini response received (truncated): {str(data)[:200]}")
+    except Exception:
+        print(f"Gemini response status: {resp.status_code}")
+
+
+def save_gemini_payload(path: str, event_id: int, prompt: str):
+    """Append the prompt to a local JSON file for manual ingestion by a model or later processing."""
+    entry = { 'event_id': event_id, 'prompt': prompt }
+    try:
+        if os.path.exists(path):
+            with open(path, 'r') as f:
+                data = json.load(f)
+        else:
+            data = []
+        data.append(entry)
+        with open(path, 'w') as f:
+            json.dump(data, f, indent=2)
+        print(f"Saved Gemini payload for event {event_id} to {path}")
+    except Exception as e:
+        print(f"Failed to save Gemini payload: {e}")
 
 if __name__ == "__main__":
     main()

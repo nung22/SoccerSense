@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { GameEvent } from '@/interfaces/GameEvent';
+import { useRouter } from 'vue-router';
 
 // Props
 const props = defineProps<{
@@ -12,6 +13,13 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:selectedEvent', value: GameEvent): void;
 }>();
+
+// Router for navigation
+const router = useRouter();
+
+function goToGoals() {
+  router.push({ name: 'goals' });
+}
 
 // --- Helper function to ensure type safety ---
 function onEventChange(payload: Event) {
@@ -48,6 +56,8 @@ function onEventChange(payload: Event) {
       <small class="context-preview">
         <strong>Context:</strong> {{ selectedEvent?.motion_context || 'No context available' }}
       </small>
+
+      <button class="goal-analysis-btn" @click="goToGoals">Goal Analysis</button>
     </div>
   </div>
 </template>
@@ -109,5 +119,20 @@ select:focus {
   outline: none;
   border-color: #6f42c1;
   box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+}
+
+.goal-analysis-btn {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  background: #6f42c1;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.goal-analysis-btn:hover {
+  background: #5a319f;
 }
 </style>
