@@ -15,4 +15,16 @@ export interface GameEvent {
   teammates?: Array<{ x: number; y: number }>;
   opponents?: Array<{ x: number; y: number }>;
   has_tracking?: boolean;
+  // Enriched metadata from ETL
+  build_up_events?: Array<{
+    time_s?: number;
+    time_min?: number;
+    type?: string;
+    subtype?: string;
+    from?: string;
+    to?: string;
+    team?: string;
+  }>;
+  home_team?: string;
+  away_team?: string;
 }
