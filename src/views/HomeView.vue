@@ -65,7 +65,7 @@ function jumpToEvent(id: number) {
     <div class="header-section">
       <header class="branding">
         <h1>SoccerSense <span class="badge">Demo Mode</span></h1>
-        <p style="font-size: 1.3rem; font-style: italic; color: grey; margin-top: -.2rem;">Automated Match Summarization & Tactical Visualization</p>
+        <p style="font-size: 1.3rem; font-style: italic; color: grey; margin-top: -.2rem;">Match Summarization & Tactical Visualization Tool</p>
       </header>
 
       <div class="control-panel">

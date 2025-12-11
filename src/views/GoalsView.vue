@@ -10,7 +10,7 @@ import { generateMatchReport } from '@/api/llmService';
 const events = (allEvents as GameEvent[]);
 const goals = events.filter(e => e.event_type === 'Goal');
 
-const selectedGoalId = ref<number | null>(goals.length ? goals[0].id : null);
+const selectedGoalId = ref<number | null>(goals.length ? goals[0]!.id : null);
 const router = useRouter();
 
 function goHome() {
@@ -234,7 +234,7 @@ function scoredThroughDefenders(goal: GameEvent) {
 </script>
 
 <template>
-  <div class="goals-container">
+  <div class="goals-container" style="font-family: Arial;">
     <aside class="goals-list card">
       <div class="goals-list-header">
         <h2>Goals</h2>
